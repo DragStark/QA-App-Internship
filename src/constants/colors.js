@@ -1,4 +1,4 @@
-export default {
+const COLORS = {
   gradientForm: '#A376F1',
   primary: '#7d5fff',
   white: '#FFFFFF',
@@ -10,3 +10,5 @@ export default {
   grayLight: '#ccc',
   black: '#0a0a0a',
 };
+export default COLORS;
+

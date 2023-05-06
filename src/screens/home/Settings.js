@@ -1,8 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, SafeAreaView, TouchableOpacity} from 'react-native';
-import {COLORS} from '../../constants';
+import {COLORS, ROUTES} from '../../constants';
+import { useNavigation} from '@react-navigation/native';
 
 const Settings = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView
       style={{
@@ -16,10 +18,10 @@ const Settings = () => {
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}>
-        <Text style={styles.buttonText}>Go To Settings Detail</Text>
+        <Text style={styles.buttonText} onPress={()=>navigation.navigate(ROUTES.SETTINGS_DETAIL)}>Go To Settings Detail</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+      <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate(ROUTES.LOGIN)} activeOpacity={0.8}>
         <Text style={styles.buttonText}>Log out</Text>
       </TouchableOpacity>
     </SafeAreaView>

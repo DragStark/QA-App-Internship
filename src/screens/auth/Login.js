@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,25 +5,53 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, ROUTES} from '../../constants';
-import Logo from '../../assets/icons/LOGO.svg';
+import {useNavigation} from '@react-navigation/native';
+import {userSelector} from '../../redux/selector';
+import {useSelector, useDispatch} from 'react-redux';
+import {loginSuccess} from './authSlice';
 
 const Login = () => {
+  const navigation = useNavigation(); //tạo đối tượng navigation để di chuyển giữa các màn hình
+  const users = useSelector(userSelector);
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('initialState');
+  const handleLogin = () => {
+    let user = users.find(u => u.email === email && u.password === password);
+    if (user) {
+      dispatch(loginSuccess(user.name));
+      navigation.navigate(ROUTES.HOME);
+    } else {
+      Alert.alert('warning', 'wrong password or email');
+    }
+  };
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.container}>
         <View style={styles.wFull}>
           <View style={styles.row}>
-            <Logo width={55} height={55} style={styles.mr7} />
-            <Text style={styles.brandName}>Olors</Text>
+            <Text style={styles.brandName}>Intelligence Answer</Text>
           </View>
 
           <Text style={styles.loginContinueTxt}>Login in to continue</Text>
-          <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Password" />
-
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            secureTextEntry={true}
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+          />
           <View style={styles.loginBtnWrapper}>
             <LinearGradient
               colors={[COLORS.gradientForm, COLORS.primary]}
@@ -32,14 +59,24 @@ const Login = () => {
               start={{y: 0.0, x: 0.0}}
               end={{y: 1.0, x: 0.0}}>
               {/******************** LOGIN BUTTON *********************/}
-              <TouchableOpacity activeOpacity={0.7} style={styles.loginBtn}>
+              <TouchableOpacity
+                onPress={handleLogin}
+                activeOpacity={0.7}
+                style={styles.loginBtn}>
                 <Text style={styles.loginText}>Log In</Text>
               </TouchableOpacity>
             </LinearGradient>
           </View>
 
           {/***************** FORGOT PASSWORD BUTTON *****************/}
-          <TouchableOpacity style={styles.forgotPassBtn}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(ROUTES.FORGOT_PASSWORD, {
+                userId: 'X0001',
+                //khi navigate đến forgot password sẽ truyền thêm dữ liệu vào params list của biến route
+              })
+            }
+            style={styles.forgotPassBtn}>
             <Text style={styles.forgotPassText}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
@@ -47,7 +84,8 @@ const Login = () => {
         <View style={styles.footer}>
           <Text style={styles.footerText}> Don't have an account? </Text>
           {/******************** REGISTER BUTTON *********************/}
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(ROUTES.REGISTER)}>
             <Text style={styles.signupBtn}>Sign Up</Text>
           </TouchableOpacity>
         </View>
@@ -122,8 +160,8 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: COLORS.white,
-    fontSize: 16,
-    fontWeight: '400',
+    fontSize: 20,
+    fontWeight: '600',
   },
   forgotPassText: {
     color: COLORS.primary,
@@ -133,8 +171,7 @@ const styles = StyleSheet.create({
   },
   // footer
   footer: {
-    position: 'absolute',
-    bottom: 20,
+    marginTop: 10,
     textAlign: 'center',
     flexDirection: 'row',
   },

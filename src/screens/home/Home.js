@@ -1,8 +1,11 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {COLORS} from '../../constants';
+import { authenticated } from '../../redux/selector';
+import { useSelector } from 'react-redux';
 
 const Home = () => {
+  const auth = useSelector(authenticated);
   return (
     <View
       style={{
@@ -11,7 +14,7 @@ const Home = () => {
         alignItems: 'center',
         backgroundColor: COLORS.bgColor,
       }}>
-      <Text>Home!</Text>
+      <Text>Hello {auth.user}!</Text>
     </View>
   );
 };
