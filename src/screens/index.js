@@ -1,13 +1,11 @@
-export {default as SettingsDetail} from './home/SettingsDetail';
-export {default as Settings} from './home/Settings';
-export {default as Home} from './home/Home';
-export {default as Wallet} from './home/Wallet';
-export {default as ForgotPassword} from './auth/ForgotPassword';
-export {default as Chat} from './home/Chat';
-
-export {default as Notifications} from './home/Notifications';
-export {default as Profile} from './home/Profile';
+export {default as SettingsDetail} from './AppScreens/SettingTab/SettingsDetail';
+export {default as Settings} from './AppScreens/SettingTab/Settings';
+export {default as Home} from './AppScreens/HomeTab/Home';
+export {default as ForgotPassword} from './auth/register/ForgotPassword';
+export {default as Chat} from './AppScreens/ChatTab/Chat';
+export {default as Wallet} from './AppScreens/WalletDrawer/Wallet';
+export {default as Notifications} from './AppScreens/NotificationDrawer/Notifications';
 
 // Auth Screens
-export {default as Login} from './auth/Login';
-export {default as Register} from './auth/Register';
+export {default as Login} from './auth/login/Login';
+export {default as Register} from './auth/register/Register';
