@@ -2,15 +2,15 @@ import SQLite from 'react-native-sqlite-storage';
 
 const db = SQLite.openDatabase({name: 'myDatabase.db', location: 'default'});
 
-export const createMessagesTable = () => {
+export const createAnswersTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myMessages (id INT AUTO_INCREMENT PRIMARY KEY, roomId INT NOT NULL,message TEXT NOT NULL, category INT NOT NULL,createdAt DATETIME DEFAULT CURRENT_TIMESTAMP)',
+      'CREATE TABLE IF NOT EXITS myAnswers (id INT AUTO_INCREMENT PRIMARY KEY, belongToQuestion TEXT NOT NULL,content TEXT NOT NULL, category INT NOT NULL)',
       [],
       () => {
         // Data inserted successfully
-        console.log('Create myMessages table successfully');
+        console.log('Create myAnswers table successfully');
       },
       (_, error) => {
         // Handle insertion error here
@@ -20,15 +20,14 @@ export const createMessagesTable = () => {
   });
 };
 
-export const addMessage = (roomId, message, category) => {
+export const addAnswer = (belongToQuestion, content, category) => {
   db.transaction(tx => {
-    //add user question
     tx.executeSql(
-      'INSERT INTO myMessages (roomId, message, category) VALUES (?,?,?)',
-      [roomId, message, category],
+      'INSERT INTO myAnswers (belongToQuestion, content, category) VALUES (?,?,?)',
+      [belongToQuestion, content, category],
       (_, result) => {
         // Data inserted successfully
-        console.log('user message inserted successfully');
+        console.log('Data inserted successfully');
         console.log(result);
       },
       (_, error) => {
@@ -39,26 +38,26 @@ export const addMessage = (roomId, message, category) => {
   });
 };
 
-export const getMessagesListFromDB = () => {
+export const getAnswersListFromDB = () => {
   //vì hàm db.transaction là hàm đồng bộ nên cần thời gian lấy dữ liệu, cần tạo ra promise để đợi hàm này hoạt động
   return new Promise((resolve, reject) => {
-    let messagesList = [];
+    let answersList = [];
 
-    const pushDataToMessagesList = data => {
-      messagesList.push(data);
+    const pushDataToAnswerList = data => {
+      answersList.push(data);
     };
 
     db.transaction(
       tx => {
         tx.executeSql(
-          'SELECT * FROM myMessages',
+          'SELECT * FROM myAnswers',
           [],
           (_, resultSet) => {
             const rows = resultSet.rows;
             for (let i = 0; i < rows.length; i++) {
-              pushDataToMessagesList(rows.item(i));
+              pushDataToAnswerList(rows.item(i));
             }
-            resolve(messagesList); // Resolve the promise with the messagesList
+            resolve(answersList); // Resolve the promise with the messagesList
           },
           (_, error) => {
             reject(error); // Reject the promise with the error
@@ -72,13 +71,13 @@ export const getMessagesListFromDB = () => {
   });
 };
 
-export const deleteMessagesTable = () => {
+export const deleteAnswersTable = () => {
   db.transaction(tx => {
     tx.executeSql(
-      'DROP TABLE IF EXISTS myMessages',
+      'DROP TABLE IF EXISTS myAnswers',
       [], // Pass any necessary parameters here
       () => {
-        console.log('Deleted myMessages table!');
+        console.log('Deleted myAnswers table!');
       },
       (_, err) => {
         console.log(err);

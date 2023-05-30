@@ -21,5 +21,7 @@ const ROUTES = {
   PROFILE: 'My Profile',
 
   CHAT: 'Chat',
+
+  ADD_ANSWER: 'Add Answer',
 };
 export default ROUTES;

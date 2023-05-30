@@ -1,6 +1,14 @@
-const userSelector = state => state.user;
-const authenticated = state => state.auth;
-const messagesCollector = state => state.messages;
+const userCollector = state => state.user;
+const userSelector = state => state.auth.user;
+const roomsCollector = state => state.rooms;
+const answersCollector = state => state.answers;
 
+const roomMessagesCollector = state => state.messages;
 
-export {userSelector, authenticated, messagesCollector};
+export {
+  userCollector,
+  userSelector,
+  roomMessagesCollector,
+  roomsCollector,
+  answersCollector,
+};

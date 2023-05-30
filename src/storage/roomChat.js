@@ -2,11 +2,11 @@ import SQLite from 'react-native-sqlite-storage';
 
 const db = SQLite.openDatabase({name: 'myDatabase.db', location: 'default'});
 
-export const createMessagesTable = () => {
+export const createRoomChatTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myMessages (id INT AUTO_INCREMENT PRIMARY KEY, roomId INT NOT NULL,message TEXT NOT NULL, category INT NOT NULL,createdAt DATETIME DEFAULT CURRENT_TIMESTAMP)',
+      'CREATE TABLE IF NOT EXITS myRoomChat (id INT AUTO_INCREMENT PRIMARY KEY,userId INT, category INT NOT NULL',
       [],
       () => {
         // Data inserted successfully
@@ -20,12 +20,12 @@ export const createMessagesTable = () => {
   });
 };
 
-export const addMessage = (roomId, message, category) => {
+export const addRoom = (userId, category) => {
   db.transaction(tx => {
     //add user question
     tx.executeSql(
-      'INSERT INTO myMessages (roomId, message, category) VALUES (?,?,?)',
-      [roomId, message, category],
+      'INSERT INTO myRoomChat (userId, category) VALUES (?,?)',
+      [userId, category],
       (_, result) => {
         // Data inserted successfully
         console.log('user message inserted successfully');
@@ -39,26 +39,26 @@ export const addMessage = (roomId, message, category) => {
   });
 };
 
-export const getMessagesListFromDB = () => {
+export const getRoomListForUser = (user) => {
   //vì hàm db.transaction là hàm đồng bộ nên cần thời gian lấy dữ liệu, cần tạo ra promise để đợi hàm này hoạt động
   return new Promise((resolve, reject) => {
-    let messagesList = [];
+    let roomList = [];
 
-    const pushDataToMessagesList = data => {
-      messagesList.push(data);
+    const pushDataToRoomList = data => {
+      roomList.push(data);
     };
 
     db.transaction(
       tx => {
         tx.executeSql(
-          'SELECT * FROM myMessages',
-          [],
+          'SELECT * FROM myRoomChat WHERE userId = ?',
+          [user.id],
           (_, resultSet) => {
             const rows = resultSet.rows;
             for (let i = 0; i < rows.length; i++) {
-              pushDataToMessagesList(rows.item(i));
+              pushDataToRoomList(rows.item(i));
             }
-            resolve(messagesList); // Resolve the promise with the messagesList
+            resolve(roomList); // Resolve the promise with the messagesList
           },
           (_, error) => {
             reject(error); // Reject the promise with the error
@@ -72,10 +72,10 @@ export const getMessagesListFromDB = () => {
   });
 };
 
-export const deleteMessagesTable = () => {
+export const deleteRoomChatTable = () => {
   db.transaction(tx => {
     tx.executeSql(
-      'DROP TABLE IF EXISTS myMessages',
+      'DROP TABLE IF EXISTS myRoomChat',
       [], // Pass any necessary parameters here
       () => {
         console.log('Deleted myMessages table!');

@@ -9,3 +9,7 @@ export {default as Notifications} from './AppScreens/NotificationDrawer/Notifica
 // Auth Screens
 export {default as Login} from './auth/login/Login';
 export {default as Register} from './auth/register/Register';
+
+
+//add answers screen
+export {default as AddAnswer} from './admin/addAnswer/AddAnswer.js';

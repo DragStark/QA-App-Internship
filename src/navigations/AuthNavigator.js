@@ -1,8 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Login, ForgotPassword, Register} from '../screens';
+import {Login, ForgotPassword, Register, AddAnswer} from '../screens';
 import {ROUTES, COLORS} from '../constants';
-import BottomTabNavigator from './BottomTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
 
 const Stack = createStackNavigator();
@@ -31,6 +30,7 @@ const AuthNavigator = () => {
         })}
       />
       <Stack.Screen name={ROUTES.REGISTER} component={Register} />
+      <Stack.Screen name={ROUTES.ADD_ANSWER} component={AddAnswer} />
       <Stack.Screen
         name={ROUTES.HOME}
         component={DrawerNavigator}

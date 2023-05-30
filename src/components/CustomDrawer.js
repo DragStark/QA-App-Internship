@@ -9,24 +9,33 @@ import {
 import React from 'react';
 import {
   DrawerContentScrollView,
-  DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {IMGS, COLORS} from '../constants';
-import {authenticated} from '../redux/selector';
+import {COLORS} from '../constants';
+import {userSelector} from '../redux/selector';
 import {useSelector} from 'react-redux';
 
 const {width} = Dimensions.get('screen');
-
 const CustomDrawer = props => {
-  const user = useSelector(authenticated).user;
+  const user = useSelector(userSelector);
   return (
     <DrawerContentScrollView {...props}>
-      <ImageBackground source={IMGS.bgPattern} style={{height: 140}}>
-        <Image source={IMGS.user} style={styles.userImg} />
+      <ImageBackground
+        source={
+          user
+            ? {uri: user.background}
+            : require('../assets/default-background.jpg')
+        }
+        style={{height: 140}}>
+        <Image
+          source={
+            user ? {uri: user.avatar} : require('../assets/default-user.png')
+          }
+          style={styles.userImg}
+        />
       </ImageBackground>
-      <View>
-        <Text>{user ? user : ''}</Text>
+      <View style={styles.userNameWrapper}>
+        <Text style={styles.userName}>{user ? user.name : ''}</Text>
       </View>
       <View style={styles.drawerListWrapper}>
         <DrawerItemList {...props} />
@@ -48,7 +57,16 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: COLORS.white,
   },
+  userNameWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 60,
+  },
+  userName: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
   drawerListWrapper: {
-    marginTop: 65,
+    marginTop: 10,
   },
 });

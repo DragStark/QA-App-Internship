@@ -11,25 +11,44 @@ import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, ROUTES} from '../../../constants';
 import {useNavigation} from '@react-navigation/native';
-import {userSelector} from '../../../redux/selector';
+import {userCollector} from '../../../redux/selector';
 import {useSelector, useDispatch} from 'react-redux';
 import {loginSuccess} from './authSlice';
+import {addUser} from '../register/userSlice';
+import {getUserListFromDB} from '../../../storage/user';
 
 const Login = () => {
   const navigation = useNavigation(); //tạo đối tượng navigation để di chuyển giữa các màn hình
-  const users = useSelector(userSelector);
+  const users = useSelector(userCollector);
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // khi focus vào ô nhập tài khoản thì lập tức collect từ database ra dữ liệu users
+  const startCollections = () => {
+    getUserListFromDB()
+      .then(userList => {
+        console.log('get',userList.length,'users from DB then push into redux');
+        //userList hiện tại là một array nên ta không thể push trực tiếp vào trong redux state được, cần dùng spread
+        dispatch(addUser(...userList));
+      })
+      .catch(error => {
+        console.log(error); // Handle any errors
+      });
+  };
+
   const handleLogin = () => {
     let user = users.find(u => u.email === email && u.password === password);
     if (user) {
-      dispatch(loginSuccess(user.name));
+      dispatch(loginSuccess(user));
+      setEmail('');
+      setPassword('');
       navigation.navigate(ROUTES.HOME);
     } else {
       Alert.alert('warning', 'wrong password or email');
     }
   };
+
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.container}>
@@ -44,6 +63,7 @@ const Login = () => {
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
+            onFocus={startCollections}
           />
           <TextInput
             secureTextEntry={true}
@@ -87,6 +107,14 @@ const Login = () => {
           <TouchableOpacity
             onPress={() => navigation.navigate(ROUTES.REGISTER)}>
             <Text style={styles.signupBtn}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footer}>
+          {/******************** REGISTER BUTTON *********************/}
+          <TouchableOpacity
+            onPress={() => navigation.navigate(ROUTES.ADD_ANSWER)}>
+            <Text style={styles.signupBtn}>Add Answer</Text>
           </TouchableOpacity>
         </View>
       </View>

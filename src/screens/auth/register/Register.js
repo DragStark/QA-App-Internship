@@ -1,18 +1,14 @@
 import React, {useState} from 'react';
 import {TextInput, Button, StyleSheet, Alert, Text} from 'react-native';
 import {KeyboardAvoidingView, ScrollView} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {addUser} from './userSlice';
-import {useSelector} from 'react-redux';
-import {userSelector} from '../../../redux/selector';
+import {addUserToDB} from '../../../storage/user';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const dispatch = useDispatch();
-  const userList = useSelector(userSelector);
+
   const handleRegister = () => {
     if (!name || !username || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields.');
@@ -23,15 +19,8 @@ const Register = () => {
       Alert.alert('Error', 'Passwords do not match.');
       return;
     }
-    // handle add user to userSlice
-    dispatch(
-      addUser({
-        id: userList[userList.length - 1] + 1,
-        name: name,
-        email: username,
-        password: password,
-      }),
-    );
+    //handle add user to DB
+    addUserToDB(name, username, password);
     // Clear the form
     setName('');
     setUsername('');
