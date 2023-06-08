@@ -6,7 +6,7 @@ export const createRoomChatTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myRoomChat (id INT AUTO_INCREMENT PRIMARY KEY,userId INT, category INT NOT NULL',
+      'CREATE TABLE IF NOT EXITS myRoomChat (id INT PRIMARY KEY,name VARCHAR(50) NOT NULL, description VARCHAR(255) NOT NULL, userId INT NOT NULL, category INT NOT NULL)',
       [],
       () => {
         // Data inserted successfully
@@ -20,12 +20,12 @@ export const createRoomChatTable = () => {
   });
 };
 
-export const addRoom = (userId, category) => {
+export const addRoom = (id, name, description, category, userId) => {
   db.transaction(tx => {
     //add user question
     tx.executeSql(
-      'INSERT INTO myRoomChat (userId, category) VALUES (?,?)',
-      [userId, category],
+      'INSERT INTO myRoomChat (id, name, description, category, userId) VALUES (?,?,?,?,?)',
+      [id, name, description, category, userId],
       (_, result) => {
         // Data inserted successfully
         console.log('user message inserted successfully');
@@ -39,7 +39,7 @@ export const addRoom = (userId, category) => {
   });
 };
 
-export const getRoomListForUser = (user) => {
+export const getRoomList = () => {
   //vì hàm db.transaction là hàm đồng bộ nên cần thời gian lấy dữ liệu, cần tạo ra promise để đợi hàm này hoạt động
   return new Promise((resolve, reject) => {
     let roomList = [];
@@ -51,8 +51,8 @@ export const getRoomListForUser = (user) => {
     db.transaction(
       tx => {
         tx.executeSql(
-          'SELECT * FROM myRoomChat WHERE userId = ?',
-          [user.id],
+          'SELECT * FROM myRoomChat',
+          [],
           (_, resultSet) => {
             const rows = resultSet.rows;
             for (let i = 0; i < rows.length; i++) {

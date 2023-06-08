@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import generateAnswer from '../../../services/generateAnswer';
+import { addMessageToDB } from '../../../storage/message';
 
 const initialState = [
   {
@@ -7,14 +8,12 @@ const initialState = [
     message: 'Hôm nay ăn gì?',
     roomId: 1,
     userId: 6,
-    //createdAt: time1,
   },
   {
     id: 2,
     message: 'Ăn nhiều rau và bổ sung thêm protein với beef steak.',
     roomId: 1,
     userId: 0,
-    //createdAt: time1,
   },
 ];
 
@@ -23,29 +22,22 @@ const messagesSlice = createSlice({
   initialState,
   reducers: {
     addMessageAndAnswer(state, action) {
-      //let timestamp = new Date().getTime();
-      console.log(action.payload.id);
-      let botMessage = generateAnswer(
-        action.payload.category,
-        action.payload.message,
-        action.payload.answersList,
-      );
       //push user's question
       state.push({
         id: action.payload.id,
         message: action.payload.message,
         roomId: action.payload.roomId,
         userId: action.payload.userId,
-        //createdAt: timestamp,
       });
+      //addMessageToDB(action.payload.id, action.payload.message, action.payload.roomId, action.payload.userId);
       //push bot answer
       state.push({
         id: action.payload.id + 1,
-        message: botMessage,
+        message: action.payload.botMessage,
         roomId: action.payload.roomId,
         userId: 0, // bot id
-        //createdAt: timestamp,
       });
+      //addMessageToDB(action.payload.id + 1, botMessage, action.payload.roomId, 0);
     },
     removeMessageAndAnswer(state, actions) {
       console.log('Removing message');

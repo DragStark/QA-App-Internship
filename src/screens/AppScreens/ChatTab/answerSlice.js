@@ -49,6 +49,7 @@ const answersSlice = createSlice({
       state.map(answer => {
         if (answer.id === actions.payload) {
           answer.castTimes++;
+          console.log(answer);
         }
       });
     },

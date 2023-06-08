@@ -23,6 +23,8 @@ import {
 import {addMessageAndAnswer} from './messagesSlice';
 import checkQuestion from '../../../services/checkQuestion';
 import {useNavigation} from '@react-navigation/native';
+import generateAnswer from '../../../services/generateAnswer';
+import {castTimesIncrease} from './answerSlice';
 
 const {width} = Dimensions.get('screen');
 
@@ -40,12 +42,15 @@ const Chat = ({route}) => {
   const flatListRef = useRef(null);
   const navigation = useNavigation();
 
+  //prepare data filtering when open chat box
   useEffect(() => {
+    //get messages list of this room
     const roomMessages = messages.filter(message => message.roomId === roomId);
+    //get answers list by thi room category
     const roomAnswers = answersList.filter(
       answer => answer.category === roomCategory,
     );
-    //sort room answers by castTimes descending
+    //sort room answers list by castTimes descending
     roomAnswers.sort((a, b) => b.castTimes - a.castTimes);
     // get top 3 most call answers
     const top3MostCall = roomAnswers.slice(0, 3);
@@ -64,6 +69,7 @@ const Chat = ({route}) => {
     setTop3(top3MostCall);
   }, [roomId, roomCategory, messages, answersList, inputText]);
 
+  //render message list of this room
   const renderItem = ({item}) => (
     <View>
       <Image
@@ -88,6 +94,7 @@ const Chat = ({route}) => {
     </View>
   );
 
+  // render suggestions list when typing in inbox
   const renderMostPopularQuestion = ({item}) => (
     <TouchableOpacity
       style={styles.suggestWrapper}
@@ -96,31 +103,45 @@ const Chat = ({route}) => {
     </TouchableOpacity>
   );
 
+  //when chose once of top 3 in suggestion list
   const handleChoseSuggestion = question => {
+    //generate bot answer
+    let botMessage = generateAnswer(roomCategory, question, answers);
+    //add message and answer to redux
     dispatch(
       addMessageAndAnswer({
-        id: messages[messages.length - 1].id + 1,
+        id: messages.length > 0 ? messages[messages.length - 1].id + 1 : 0,
         roomId: roomId,
         userId: user.id,
         message: question,
+        botMessage: botMessage.content,
         category: roomCategory,
         answersList: answers,
       }),
     );
+    //also increase cast time of this question
+    dispatch(castTimesIncrease(botMessage.id));
   };
 
+  //when press on send button of inbox
   const handleSendMessage = () => {
     if (checkQuestion(inputText)) {
+      //generate bot answer
+      let botMessage = generateAnswer(roomCategory, inputText.trim(), answers);
+      //add message and answer to redux
       dispatch(
         addMessageAndAnswer({
-          id: messages[messages.length - 1].id + 1,
+          id: messages.length > 0 ? messages[messages.length - 1].id + 1 : 0,
           roomId: roomId,
           userId: user.id,
           message: inputText.trim(),
+          botMessage: botMessage.content,
           category: roomCategory,
           answersList: answers,
         }),
       );
+      //also increase cast time of this question
+      dispatch(castTimesIncrease(botMessage.id));
       setInputText('');
       Keyboard.dismiss();
       if (data.length > 0) {

@@ -6,6 +6,7 @@ import {loginSuccess} from '../login/authSlice';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import { ROUTES } from '../../../constants';
+import { addUser } from './userSlice';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -36,6 +37,7 @@ const Register = () => {
     getLastUserFromDB()
       .then(lastUser => {
         dispatch(loginSuccess(lastUser));
+        dispatch(addUser(lastUser));
       })
       .catch(error => {
         console.log(error); // Handle any errors

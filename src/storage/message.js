@@ -6,7 +6,7 @@ export const createMessagesTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myMessages (id INT AUTO_INCREMENT PRIMARY KEY, roomId INT NOT NULL,message TEXT NOT NULL, category INT NOT NULL,createdAt DATETIME DEFAULT CURRENT_TIMESTAMP)',
+      'CREATE TABLE IF NOT EXITS myMessages (id INT PRIMARY KEY,message TEXT NOT NULL, roomId INT NOT NULL, userId INT NOT NULL)',
       [],
       () => {
         // Data inserted successfully
@@ -20,12 +20,12 @@ export const createMessagesTable = () => {
   });
 };
 
-export const addMessage = (roomId, message, category) => {
+export const addMessageToDB = (id, message, roomId, userId) => {
   db.transaction(tx => {
     //add user question
     tx.executeSql(
-      'INSERT INTO myMessages (roomId, message, category) VALUES (?,?,?)',
-      [roomId, message, category],
+      'INSERT INTO myMessages (id, message, roomId, userId) VALUES (?,?,?,?)',
+      [id, message, roomId, userId],
       (_, result) => {
         // Data inserted successfully
         console.log('user message inserted successfully');

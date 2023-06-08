@@ -103,7 +103,7 @@ const Login = () => {
           </View>
 
           <View style={styles.footer}>
-            {/******************** REGISTER BUTTON *********************/}
+            {/******************** Add Answer *********************/}
             <TouchableOpacity
               onPress={() => navigation.navigate(ROUTES.ADD_ANSWER)}>
               <Text style={styles.signupBtn}>Add Answer</Text>

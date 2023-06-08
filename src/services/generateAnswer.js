@@ -5,7 +5,7 @@ const generateAnswer = (category, question, answersList) => {
     answer => answer.belongToQuestion === question,
   );
   return returnAnswer
-    ? returnAnswer.content
+    ? returnAnswer
     : 'Xin lỗi, tôi không thể trả lời câu hỏi này!';
 };
 export default generateAnswer;

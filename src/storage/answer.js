@@ -6,7 +6,7 @@ export const createAnswersTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myAnswers (id INT AUTO_INCREMENT PRIMARY KEY, belongToQuestion TEXT NOT NULL,content TEXT NOT NULL, category INT NOT NULL)',
+      'CREATE TABLE IF NOT EXITS myAnswers (id INT AUTO_INCREMENT PRIMARY KEY, belongToQuestion TEXT NOT NULL,content TEXT NOT NULL, category INT NOT NULL, castTimes INT NOT NULL)',
       [],
       () => {
         // Data inserted successfully
@@ -20,11 +20,11 @@ export const createAnswersTable = () => {
   });
 };
 
-export const addAnswer = (belongToQuestion, content, category) => {
+export const addAnswer = (belongToQuestion, content, category, castTimes) => {
   db.transaction(tx => {
     tx.executeSql(
-      'INSERT INTO myAnswers (belongToQuestion, content, category) VALUES (?,?,?)',
-      [belongToQuestion, content, category],
+      'INSERT INTO myAnswers (belongToQuestion, content, category, castTimes) VALUES (?,?,?)',
+      [belongToQuestion, content, category, castTimes],
       (_, result) => {
         // Data inserted successfully
         console.log('Data inserted successfully');
