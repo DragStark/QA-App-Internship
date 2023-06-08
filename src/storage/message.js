@@ -6,7 +6,7 @@ export const createMessagesTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myMessages (id INT PRIMARY KEY,message TEXT NOT NULL, roomId INT NOT NULL, userId INT NOT NULL)',
+      'CREATE TABLE IF NOT EXISTS myMessages (id INTEGER PRIMARY KEY,message TEXT NOT NULL, roomId INTEGER NOT NULL, userId INTEGER NOT NULL)',
       [],
       () => {
         // Data inserted successfully
@@ -38,6 +38,26 @@ export const addMessageToDB = (id, message, roomId, userId) => {
     );
   });
 };
+
+export const deleteMessageById = (id) => {
+  db.transaction(tx => {
+    //add user question
+    tx.executeSql(
+      'DELETE FROM myMessages WHERE id = ?;',
+      [id],
+      (_, result) => {
+        // Data inserted successfully
+        console.log('deleted message', id);
+        console.log(result);
+      },
+      (_, error) => {
+        // Handle insertion error here
+        console.log(error);
+      },
+    );
+  });
+};
+
 
 export const getMessagesListFromDB = () => {
   //vì hàm db.transaction là hàm đồng bộ nên cần thời gian lấy dữ liệu, cần tạo ra promise để đợi hàm này hoạt động

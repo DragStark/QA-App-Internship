@@ -56,7 +56,7 @@ const Home = () => {
     // console.log(room);
     dispatch(
       addRoom({
-        id: roomsList.length + 1,
+        id: roomsList.length > 0 ? roomsList[roomsList.length - 1] + 1 : 0,
         name: room.name,
         description: room.description,
         userId: user.id,

@@ -38,7 +38,6 @@ export default function BottomTabNavigator() {
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.dark,
         tabBarShowLabel: false,
-        tabBarHideOnKeyboard: true,
         tabBarStyle: styles.tabBarStyled,
         tabBarIcon: ({focused, color, size}) => (
           <Icon name={selectedIcon(route, focused)} color={color} size={24} />

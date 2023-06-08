@@ -6,7 +6,7 @@ export const createAnswersTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myAnswers (id INT AUTO_INCREMENT PRIMARY KEY, belongToQuestion TEXT NOT NULL,content TEXT NOT NULL, category INT NOT NULL, castTimes INT NOT NULL)',
+      'CREATE TABLE IF NOT EXISTS myAnswers (id INTEGER PRIMARY KEY AUTOINCREMENT, belongToQuestion TEXT NOT NULL,content TEXT NOT NULL, category VARCHAR NOT NULL, castTimes INTEGER NOT NULL)',
       [],
       () => {
         // Data inserted successfully
@@ -20,14 +20,32 @@ export const createAnswersTable = () => {
   });
 };
 
-export const addAnswer = (belongToQuestion, content, category, castTimes) => {
+export const addAnswerToDB = () => {
   db.transaction(tx => {
     tx.executeSql(
-      'INSERT INTO myAnswers (belongToQuestion, content, category, castTimes) VALUES (?,?,?)',
-      [belongToQuestion, content, category, castTimes],
+      'INSERT INTO myAnswers (belongToQuestion, content, category, castTimes) VALUES (?,?,?,?)',
+      ['Tôi muốn học về kinh doanh, nên bắt đầu từ đâu ?','Bạn nên bắt đầu học từ những cuốn sách, có hàng triệu cuốn sách dạy về việc kinh doanh sao cho hiệu quả, hãy bắt đầu đọc những cuốn sách kinh điển như: cà phê sáng cùng tony, người giàu nhất thành babylon, ...','Kinh doanh', 0],
       (_, result) => {
         // Data inserted successfully
         console.log('Data inserted successfully');
+        console.log(result);
+      },
+      (_, error) => {
+        // Handle insertion error here
+        console.log(error);
+      },
+    );
+  });
+};
+
+export const updateCastTimesById = id => {
+  db.transaction(tx => {
+    tx.executeSql(
+      'UPDATE myAnswers SET castTimes = castTimes + 1 WHERE id = ?',
+      [id],
+      (_, result) => {
+        // Data inserted successfully
+        console.log('increased castTimes of question', id);
         console.log(result);
       },
       (_, error) => {

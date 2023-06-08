@@ -6,11 +6,11 @@ export const createRoomChatTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXITS myRoomChat (id INT PRIMARY KEY,name VARCHAR(50) NOT NULL, description VARCHAR(255) NOT NULL, userId INT NOT NULL, category INT NOT NULL)',
+      'CREATE TABLE IF NOT EXISTS myRoomChat (id INTEGER PRIMARY KEY,name VARCHAR(50) NOT NULL, description VARCHAR(255) NOT NULL, userId INTEGER NOT NULL, category INTEGER NOT NULL)',
       [],
       () => {
         // Data inserted successfully
-        console.log('Create myMessages table successfully');
+        console.log('Create myRoomChat table successfully');
       },
       (_, error) => {
         // Handle insertion error here
@@ -20,7 +20,7 @@ export const createRoomChatTable = () => {
   });
 };
 
-export const addRoom = (id, name, description, category, userId) => {
+export const addRoomToDB = (id, name, description, category, userId) => {
   db.transaction(tx => {
     //add user question
     tx.executeSql(
@@ -28,7 +28,26 @@ export const addRoom = (id, name, description, category, userId) => {
       [id, name, description, category, userId],
       (_, result) => {
         // Data inserted successfully
-        console.log('user message inserted successfully');
+        console.log('user room chat inserted successfully');
+        console.log(result);
+      },
+      (_, error) => {
+        // Handle insertion error here
+        console.log(error);
+      },
+    );
+  });
+};
+
+export const deleteRoomById = (id) => {
+  db.transaction(tx => {
+    //add user question
+    tx.executeSql(
+      'DELETE FROM myRoomChat WHERE id = ?',
+      [id],
+      (_, result) => {
+        // Data inserted successfully
+        console.log('deleted room', id);
         console.log(result);
       },
       (_, error) => {
