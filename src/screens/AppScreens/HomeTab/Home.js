@@ -1,52 +1,83 @@
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, Button} from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, ROUTES} from '../../../constants';
 import {userSelector, roomsCollector} from '../../../redux/selector';
-import {useSelector ,useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import AddRoomModal from './AddRoomModal';
-import { addRoom } from './roomSlice';
+import {addRoom, removeRoom} from './roomSlice';
+import {removeMessageAndAnswer} from '../ChatTab/messagesSlice';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const {width} = Dimensions.get('screen');
 
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [deleteRoomId, setDeleteRoomId] = useState(0);
   const user = useSelector(userSelector);
-  const roomsList = useSelector(roomsCollector);
+  const roomsList = useSelector(roomsCollector).filter(
+    room => room.userId === user.id,
+  );
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  navigation.setOptions({
+    tabBarVisible: true,
+  });
 
   const roomRender = () => {
     return roomsList.map(room => (
-      <TouchableOpacity
-        key={room.id}
-        style={styles.room}
-        onPress={() =>
-          navigation.navigate(ROUTES.CHAT, {
-            roomId: room.id,
-            roomName: room.name,
-            roomDescription: room.description,
-            roomCategory: room.category,
-          })
-        }>
-        <Text style={styles.roomTitle}>{room.name}</Text>
-        <Text style={styles.roomDescription}>{room.description}</Text>
-        <Text style={styles.roomCategory}>{'Chủ đề: ' + room.category}</Text>
-      </TouchableOpacity>
+      <View key={room.id} style={styles.roomWrapper}>
+        <TouchableOpacity
+          style={styles.room}
+          onPress={() =>
+            navigation.navigate(ROUTES.CHAT, {
+              roomId: room.id,
+              roomName: room.name,
+              roomDescription: room.description,
+              roomCategory: room.category,
+            })
+          }>
+          <Text style={styles.roomTitle}>{room.name}</Text>
+          <Text style={styles.roomDescription}>{room.description}</Text>
+          <Text style={styles.roomCategory}>{'Chủ đề: ' + room.category}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          styles={styles.btnDeleteRoom}
+          onPress={() => handleDeleteRoom(room.id)}>
+          <Icon name="trash" color="red" size={25} />
+        </TouchableOpacity>
+      </View>
     ));
   };
 
   const handleSaveRoom = room => {
-    console.log(room);
-    dispatch(addRoom({
-      id: roomsList.length + 1,
-      name: room.name,
-      description: room.description,
-      userId: user.id,
-      category: room.category,
-    }));
+    // console.log(room);
+    dispatch(
+      addRoom({
+        id: roomsList.length + 1,
+        name: room.name,
+        description: room.description,
+        userId: user.id,
+        category: room.category,
+      }),
+    );
     setModalVisible(false);
+  };
+
+  const handleDeleteRoom = roomId => {
+    setConfirmVisible(true);
+    setDeleteRoomId(roomId);
+  };
+  const handleConfirmDelete = () => {
+    setConfirmVisible(false);
+    //remove room in redux
+    dispatch(removeRoom(deleteRoomId));
+    //remove message of room in redux
+    dispatch(removeMessageAndAnswer(deleteRoomId));
+    //remove message in DB
+    //remove message of room in DB
   };
 
   return (
@@ -71,9 +102,29 @@ const Home = () => {
               onSave={handleSaveRoom}
             />
           </View>
-          <ScrollView style={styles.roomList}>{roomRender()}</ScrollView>
+          <ScrollView style={styles.roomList}>
+            {roomsList.length > 0 && roomRender()}
+          </ScrollView>
         </View>
       </View>
+      {confirmVisible && <View style={styles.opacityBg}></View>}
+      {confirmVisible && (
+        <View style={styles.confirmPopup}>
+          <Text>Bạn có chắc chắn muốn xóa phòng chat này không ?</Text>
+          <View style={styles.btnGroup}>
+            <TouchableOpacity
+              style={styles.btnConfirm}
+              onPress={() => setConfirmVisible(false)}>
+              <Text style={styles.btnConfirmLabel}>Không</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnConfirm}
+              onPress={handleConfirmDelete}>
+              <Text style={styles.btnConfirmLabel}>Có</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -129,10 +180,18 @@ const styles = StyleSheet.create({
   addChatText: {
     color: COLORS.white,
   },
-  room: {
+  roomWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.grayLight,
+    borderRadius: 5,
+    marginBottom: 10,
     padding: 10,
-    margin: 10,
-    borderTopWidth: 1,
+  },
+  room: {
+    width: 290,
+    borderRightWidth: 1,
+    marginRight: 10,
   },
   roomTitle: {
     fontSize: 16,
@@ -143,6 +202,46 @@ const styles = StyleSheet.create({
   },
   roomCategory: {
     color: COLORS.primary,
+    fontWeight: 'bold',
+  },
+  btnDeleteRoom: {
+    width: 20,
+    height: 20,
+    bgColor: COLORS.primary,
+  },
+  confirmPopup: {
+    position: 'absolute',
+    justifyContent: 'center',
+    backgroundColor: COLORS.white,
+    padding: 20,
+    borderRadius: 10,
+  },
+  opacityBg: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.black,
+    opacity: 0.2,
+    width: '100%',
+    height: '100%',
+  },
+  btnGroup: {
+    flexDirection: 'row',
+    width: '70%',
+    marginTop: 20,
+    justifyContent: 'space-between',
+  },
+  btnConfirm: {
+    backgroundColor: COLORS.primary,
+    width: 160,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  btnConfirmLabel: {
+    color: COLORS.white,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

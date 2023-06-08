@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Login, ForgotPassword, Register, AddAnswer} from '../screens';
+import {Login, ForgotPassword, Register, AddAnswer, SplashScreen, Chat} from '../screens';
 import {ROUTES, COLORS} from '../constants';
 import DrawerNavigator from './DrawerNavigator';
 
@@ -15,7 +15,10 @@ const AuthNavigator = () => {
           backgroundColor: COLORS.primary,
         },
       }}
-      initialRouteName={ROUTES.LOGIN}>
+      initialRouteName={ROUTES.SPLASH}>
+      <Stack.Screen name={ROUTES.SPLASH} component={SplashScreen} options={{
+        headerShown: false,
+      }}/>
       <Stack.Screen name={ROUTES.LOGIN} component={Login} options={{
         headerShown: false,
       }}/>
@@ -31,6 +34,9 @@ const AuthNavigator = () => {
       />
       <Stack.Screen name={ROUTES.REGISTER} component={Register} />
       <Stack.Screen name={ROUTES.ADD_ANSWER} component={AddAnswer} />
+      <Stack.Screen options={{
+        headerShown: false,
+      }} name={ROUTES.CHAT} component={Chat} />
       <Stack.Screen
         name={ROUTES.HOME}
         component={DrawerNavigator}

@@ -13,3 +13,6 @@ export {default as Register} from './auth/register/Register';
 
 //add answers screen
 export {default as AddAnswer} from './admin/addAnswer/AddAnswer.js';
+
+//splash screen
+export {default as SplashScreen} from './splashScreen/index';

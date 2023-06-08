@@ -5,7 +5,9 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Alert,
+  Keyboard,
 } from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -14,8 +16,6 @@ import {useNavigation} from '@react-navigation/native';
 import {userCollector} from '../../../redux/selector';
 import {useSelector, useDispatch} from 'react-redux';
 import {loginSuccess} from './authSlice';
-import {addUser} from '../register/userSlice';
-import {getUserListFromDB} from '../../../storage/user';
 
 const Login = () => {
   const navigation = useNavigation(); //tạo đối tượng navigation để di chuyển giữa các màn hình
@@ -23,19 +23,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // khi focus vào ô nhập tài khoản thì lập tức collect từ database ra dữ liệu users
-  const startCollections = () => {
-    getUserListFromDB()
-      .then(userList => {
-        console.log('get',userList.length,'users from DB then push into redux');
-        //userList hiện tại là một array nên ta không thể push trực tiếp vào trong redux state được, cần dùng spread
-        dispatch(addUser(...userList));
-      })
-      .catch(error => {
-        console.log(error); // Handle any errors
-      });
-  };
 
   const handleLogin = () => {
     let user = users.find(u => u.email === email && u.password === password);
@@ -46,78 +33,84 @@ const Login = () => {
       navigation.navigate(ROUTES.HOME);
     } else {
       Alert.alert('warning', 'wrong password or email');
+      setEmail('');
+      setPassword('');
     }
   };
 
   return (
     <SafeAreaView style={styles.main}>
-      <View style={styles.container}>
-        <View style={styles.wFull}>
-          <View style={styles.row}>
-            <Text style={styles.brandName}>Intelligence Answer</Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <View style={styles.wFull}>
+            <View style={styles.row}>
+              <Text style={styles.brandName}>Intelligence Answer</Text>
+            </View>
+
+            <Text style={styles.loginContinueTxt}>Login in to continue</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              returnKeyType="next"
+              autoCorrect={false}
+            />
+            <TextInput
+              secureTextEntry={true}
+              style={styles.input}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+            />
+            <View style={styles.loginBtnWrapper}>
+              <LinearGradient
+                colors={[COLORS.gradientForm, COLORS.primary]}
+                style={styles.linearGradient}
+                start={{y: 0.0, x: 0.0}}
+                end={{y: 1.0, x: 0.0}}>
+                {/******************** LOGIN BUTTON *********************/}
+                <TouchableOpacity
+                  onPress={handleLogin}
+                  activeOpacity={0.7}
+                  style={styles.loginBtn}>
+                  <Text style={styles.loginText}>Log In</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+
+            {/***************** FORGOT PASSWORD BUTTON *****************/}
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(ROUTES.FORGOT_PASSWORD, {
+                  userId: 'X0001',
+                  //khi navigate đến forgot password sẽ truyền thêm dữ liệu vào params list của biến route
+                })
+              }
+              style={styles.forgotPassBtn}>
+              <Text style={styles.forgotPassText}>Forgot Password?</Text>
+            </TouchableOpacity>
           </View>
 
-          <Text style={styles.loginContinueTxt}>Login in to continue</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            onFocus={startCollections}
-          />
-          <TextInput
-            secureTextEntry={true}
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-          />
-          <View style={styles.loginBtnWrapper}>
-            <LinearGradient
-              colors={[COLORS.gradientForm, COLORS.primary]}
-              style={styles.linearGradient}
-              start={{y: 0.0, x: 0.0}}
-              end={{y: 1.0, x: 0.0}}>
-              {/******************** LOGIN BUTTON *********************/}
-              <TouchableOpacity
-                onPress={handleLogin}
-                activeOpacity={0.7}
-                style={styles.loginBtn}>
-                <Text style={styles.loginText}>Log In</Text>
-              </TouchableOpacity>
-            </LinearGradient>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}> Don't have an account? </Text>
+            {/******************** REGISTER BUTTON *********************/}
+            <TouchableOpacity
+              onPress={() => navigation.navigate(ROUTES.REGISTER)}>
+              <Text style={styles.signupBtn}>Sign Up</Text>
+            </TouchableOpacity>
           </View>
 
-          {/***************** FORGOT PASSWORD BUTTON *****************/}
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate(ROUTES.FORGOT_PASSWORD, {
-                userId: 'X0001',
-                //khi navigate đến forgot password sẽ truyền thêm dữ liệu vào params list của biến route
-              })
-            }
-            style={styles.forgotPassBtn}>
-            <Text style={styles.forgotPassText}>Forgot Password?</Text>
-          </TouchableOpacity>
+          <View style={styles.footer}>
+            {/******************** REGISTER BUTTON *********************/}
+            <TouchableOpacity
+              onPress={() => navigation.navigate(ROUTES.ADD_ANSWER)}>
+              <Text style={styles.signupBtn}>Add Answer</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}> Don't have an account? </Text>
-          {/******************** REGISTER BUTTON *********************/}
-          <TouchableOpacity
-            onPress={() => navigation.navigate(ROUTES.REGISTER)}>
-            <Text style={styles.signupBtn}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.footer}>
-          {/******************** REGISTER BUTTON *********************/}
-          <TouchableOpacity
-            onPress={() => navigation.navigate(ROUTES.ADD_ANSWER)}>
-            <Text style={styles.signupBtn}>Add Answer</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

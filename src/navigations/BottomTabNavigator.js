@@ -45,7 +45,6 @@ export default function BottomTabNavigator() {
         ),
       })}>
       <Tab.Screen name={ROUTES.HOME_TAB} component={Home} />
-      <Tab.Screen name={ROUTES.CHAT} component={Chat} />
       <Tab.Screen name={ROUTES.NOTIFICATIONS} component={Notifications} />
       <Tab.Screen
         name={ROUTES.SETTINGS_NAVIGATOR}

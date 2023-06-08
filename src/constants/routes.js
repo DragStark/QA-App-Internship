@@ -1,4 +1,6 @@
 const ROUTES = {
+  SPLASH: 'Splash',
+
   LOGIN: 'Login',
   REGISTER: 'Register',
   FORGOT_PASSWORD: 'Forgot Password',
@@ -6,6 +8,7 @@ const ROUTES = {
   HOME: 'Home',
   HOME_TAB: 'Home Tab',
   HOME_DRAWER: 'Home Drawer',
+  HOME_NAVIGATOR: 'Home Navigator',
 
   WALLET: 'Wallet',
   WALLET_DRAWER: 'Wallet Drawer',

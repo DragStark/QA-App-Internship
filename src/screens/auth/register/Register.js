@@ -1,13 +1,19 @@
 import React, {useState} from 'react';
 import {TextInput, Button, StyleSheet, Alert, Text} from 'react-native';
 import {KeyboardAvoidingView, ScrollView} from 'react-native';
-import {addUserToDB} from '../../../storage/user';
+import {addUserToDB, getLastUserFromDB} from '../../../storage/user';
+import {loginSuccess} from '../login/authSlice';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import { ROUTES } from '../../../constants';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleRegister = () => {
     if (!name || !username || !password || !confirmPassword) {
@@ -27,6 +33,14 @@ const Register = () => {
     setPassword('');
     setConfirmPassword('');
     Alert.alert('Success', 'Registration successful.');
+    getLastUserFromDB()
+      .then(lastUser => {
+        dispatch(loginSuccess(lastUser));
+      })
+      .catch(error => {
+        console.log(error); // Handle any errors
+      });
+    navigation.navigate(ROUTES.HOME);
   };
 
   return (

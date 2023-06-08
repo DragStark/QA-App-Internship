@@ -53,8 +53,18 @@ const AddRoomModal = ({visible, onClose, onSave}) => {
           <Text style={styles.title}>Category</Text>
           <View style={styles.categoriesList}>{renderCategories()}</View>
           <View style={styles.buttonContainer}>
-            <Button title="Cancel" onPress={onClose} color="#999" />
-            <Button title="Save" onPress={handleSave} />
+            <Button
+              title="Cancel"
+              onPress={onClose}
+              color="#999"
+              type="outline"
+            />
+            <Button
+              width={20}
+              title="Save"
+              onPress={handleSave}
+              type="outline"
+            />
           </View>
         </View>
       </View>
@@ -83,11 +93,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  title:{
+  title: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
@@ -96,8 +102,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  categoryBtn:{
+  categoryBtn: {
     margin: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
   },
 });
 

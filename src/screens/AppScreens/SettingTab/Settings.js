@@ -9,7 +9,7 @@ const Settings = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const handleLogout = () => {
-    dispatch(logoutSuccess());
+    // dispatch(logoutSuccess());
     navigation.navigate(ROUTES.LOGIN);
   };
   return (

@@ -1,13 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
 import generateAnswer from '../../../services/generateAnswer';
 
-let time1 = new Date(2023, 3, 23, 10, 20, 30, 30);
 const initialState = [
   {
     id: 1,
     message: 'Hôm nay ăn gì?',
     roomId: 1,
-    userId: 1,
+    userId: 6,
     //createdAt: time1,
   },
   {
@@ -48,9 +47,18 @@ const messagesSlice = createSlice({
         //createdAt: timestamp,
       });
     },
+    removeMessageAndAnswer(state, actions) {
+      console.log('Removing message');
+      for (let i = 0; i < state.length; i++) {
+        if (state[i].id === actions.payload) {
+          state.splice(i, 2);
+        }
+      }
+    },
   },
 });
 
-export const {addMessageAndAnswer} = messagesSlice.actions;
+export const {addMessageAndAnswer, removeMessageAndAnswer} =
+  messagesSlice.actions;
 
 export default messagesSlice;

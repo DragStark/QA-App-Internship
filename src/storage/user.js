@@ -1,8 +1,10 @@
 import SQLite from 'react-native-sqlite-storage';
 
 const db = SQLite.openDatabase({name: 'myDatabase.db', location: 'default'});
-const defaultAvatar = 'https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/348987708_1270949830189898_6659052349064814953_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=HGLV6nMivIsAX9EevgK&_nc_ht=scontent.fhan17-1.fna&oh=00_AfAZZLl6tsfM8uDUttF7jlycS7o5_MZwxb43fZmwTczFpw&oe=6471C484';
-const defaultBg = 'https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/349018307_648840813780346_8771741296418725849_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=e3f864&_nc_ohc=42rDsZalkN8AX-2MVhM&_nc_ht=scontent.fhan17-1.fna&oh=00_AfDQI3xRcgfNI8tg2GYb2o7CPUd2x3thEsn6cEQxMoujbA&oe=647152EF';
+const defaultAvatar =
+  'https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/348987708_1270949830189898_6659052349064814953_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=h_XN6XKTuaMAX9BCGdf&_nc_ht=scontent.fhan17-1.fna&oh=00_AfD5638X-k16iyuwVV1_kaBea7zTDUhlMPIIveX7aj31Dg&oe=647DA204';
+const defaultBg =
+  'https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/349018307_648840813780346_8771741296418725849_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=e3f864&_nc_ohc=tXK_-ZazvRMAX9pm4qg&_nc_ht=scontent.fhan17-1.fna&oh=00_AfA7IwHrO_eF94DdtHPAkvys4vzlF-XqklOUEu7w9CV2bw&oe=647F2AAF';
 
 const createTableQuery =
   'CREATE TABLE IF NOT EXISTS myUser (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) NOT NULL, email VARCHAR(50) NOT NULL, password VARCHAR(50) NOT NULL, avatar VARCHAR(500), background VARCHAR(500))';
@@ -59,6 +61,34 @@ export const getUserListFromDB = () => {
               pushDataToUserList(rows.item(i));
             }
             resolve(userList); // Resolve the promise with the userList
+          },
+          (_, error) => {
+            reject(error); // Reject the promise with the error
+          },
+        );
+      },
+      error => {
+        reject(error); // Reject the promise with the error
+      },
+    );
+  });
+};
+
+export const getLastUserFromDB = () => {
+  //vì hàm db.transaction là hàm đồng bộ nên cần thời gian lấy dữ liệu, cần tạo ra promise để đợi hàm này hoạt động
+  return new Promise((resolve, reject) => {
+    let lastUser = {};
+
+    db.transaction(
+      tx => {
+        tx.executeSql(
+          'SELECT * FROM myUser',
+          [],
+          (_, resultSet) => {
+            const rows = resultSet.rows;
+            lastUser = rows.item(rows.length - 1);
+            console.log(lastUser);
+            resolve(lastUser); // Resolve the promise with the userList
           },
           (_, error) => {
             reject(error); // Reject the promise with the error
