@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {addMessageToDB, deleteMessageById} from '../../../storage/message';
+import {addMessageToDB, deleteMessageByRoomId} from '../../../storage/message';
 
 const initialState = [];
 
@@ -41,10 +41,9 @@ const messagesSlice = createSlice({
     removeMessageAndAnswer(state, actions) {
       console.log('Removing message');
       for (let i = 0; i < state.length; i++) {
-        if (state[i].id === actions.payload) {
-          state.splice(i, 2);
-          deleteMessageById(actions.payload);
-          deleteMessageById(actions.payload + 1);
+        if (state[i].roomId === actions.payload) {
+          state.splice(i, 1);
+          deleteMessageByRoomId(actions.payload);
         }
       }
     },

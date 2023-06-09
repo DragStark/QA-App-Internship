@@ -96,7 +96,7 @@ const SplashScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar />
       <View style={styles.logo}>
-        <Text style={styles.text}>Splash Screen</Text>
+        <Text style={styles.text}>Xin Chào</Text>
       </View>
       <View style={styles.loadingBar}>
         <LottieView

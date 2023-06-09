@@ -2,9 +2,9 @@ import SQLite from 'react-native-sqlite-storage';
 
 const db = SQLite.openDatabase({name: 'myDatabase.db', location: 'default'});
 const defaultAvatar =
-  'https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/348987708_1270949830189898_6659052349064814953_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=h_XN6XKTuaMAX9BCGdf&_nc_ht=scontent.fhan17-1.fna&oh=00_AfD5638X-k16iyuwVV1_kaBea7zTDUhlMPIIveX7aj31Dg&oe=647DA204';
+  'https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-anh-avatar-luffy.jpg';
 const defaultBg =
-  'https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/349018307_648840813780346_8771741296418725849_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=e3f864&_nc_ohc=tXK_-ZazvRMAX9pm4qg&_nc_ht=scontent.fhan17-1.fna&oh=00_AfA7IwHrO_eF94DdtHPAkvys4vzlF-XqklOUEu7w9CV2bw&oe=647F2AAF';
+  'https://cdn.popsww.com/blog/sites/2/2022/02/Luffy-tro-thanh-vua-hai-tac-de-phieu-luu.jpg';
 
 const createTableQuery =
   'CREATE TABLE IF NOT EXISTS myUser (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) NOT NULL, email VARCHAR(50) NOT NULL, password VARCHAR(50) NOT NULL, avatar VARCHAR(500), background VARCHAR(500))';

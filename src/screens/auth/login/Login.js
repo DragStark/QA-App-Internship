@@ -44,13 +44,13 @@ const Login = () => {
         <View style={styles.container}>
           <View style={styles.wFull}>
             <View style={styles.row}>
-              <Text style={styles.brandName}>Intelligence Answer</Text>
+              <Text style={styles.brandName}>HỎI ĐÁP THÔNG MINH</Text>
             </View>
 
-            <Text style={styles.loginContinueTxt}>Login in to continue</Text>
+            <Text style={styles.loginContinueTxt}>Mời bạn đăng nhập</Text>
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder="Tài khoản"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -60,7 +60,7 @@ const Login = () => {
             <TextInput
               secureTextEntry={true}
               style={styles.input}
-              placeholder="Password"
+              placeholder="Mật Khẩu"
               value={password}
               onChangeText={setPassword}
             />
@@ -75,7 +75,7 @@ const Login = () => {
                   onPress={handleLogin}
                   activeOpacity={0.7}
                   style={styles.loginBtn}>
-                  <Text style={styles.loginText}>Log In</Text>
+                  <Text style={styles.loginText}>Đăng Nhập</Text>
                 </TouchableOpacity>
               </LinearGradient>
             </View>
@@ -89,24 +89,16 @@ const Login = () => {
                 })
               }
               style={styles.forgotPassBtn}>
-              <Text style={styles.forgotPassText}>Forgot Password?</Text>
+              <Text style={styles.forgotPassText}>Quên Mật Khẩu</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}> Don't have an account? </Text>
+            <Text style={styles.footerText}> Bạn chưa có tài khoản ? </Text>
             {/******************** REGISTER BUTTON *********************/}
             <TouchableOpacity
               onPress={() => navigation.navigate(ROUTES.REGISTER)}>
-              <Text style={styles.signupBtn}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.footer}>
-            {/******************** Add Answer *********************/}
-            <TouchableOpacity
-              onPress={() => navigation.navigate(ROUTES.ADD_ANSWER)}>
-              <Text style={styles.signupBtn}>Add Answer</Text>
+              <Text style={styles.signupBtn}>Đăng Kí Ngay</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -123,6 +115,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: COLORS.bgColor,
   },
   container: {
     padding: 15,
@@ -148,12 +141,13 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: COLORS.grayLight,
+    borderColor: COLORS.border,
     padding: 15,
     marginVertical: 10,
     borderRadius: 5,
     height: 55,
     paddingVertical: 0,
+    backgroundColor: COLORS.white,
   },
   // Login Btn Styles
   loginBtnWrapper: {

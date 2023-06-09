@@ -6,7 +6,7 @@ export const createRoomChatTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS myRoomChat (id INTEGER PRIMARY KEY,name VARCHAR(50) NOT NULL, description VARCHAR(255) NOT NULL, userId INTEGER NOT NULL, category INTEGER NOT NULL)',
+      'CREATE TABLE IF NOT EXISTS myRoomChat (id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR(50) NOT NULL, description VARCHAR(255) NOT NULL, userId INTEGER NOT NULL, category INTEGER NOT NULL)',
       [],
       () => {
         // Data inserted successfully

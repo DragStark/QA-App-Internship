@@ -1,12 +1,18 @@
 import React, {useState} from 'react';
-import {TextInput, Button, StyleSheet, Alert, Text} from 'react-native';
+import {
+  TextInput,
+  StyleSheet,
+  Alert,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {KeyboardAvoidingView, ScrollView} from 'react-native';
 import {addUserToDB, getLastUserFromDB} from '../../../storage/user';
 import {loginSuccess} from '../login/authSlice';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import { ROUTES } from '../../../constants';
-import { addUser } from './userSlice';
+import {COLORS, ROUTES} from '../../../constants';
+import {addUser} from './userSlice';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -48,21 +54,21 @@ const Register = () => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView>
-        <Text style={styles.title}>Your name</Text>
+        <Text style={styles.title}>Tên</Text>
         <TextInput
           style={styles.input}
-          placeholder="Name"
+          placeholder="Họ Và Tên, VD: Nguyễn Văn A"
           value={name}
           onChangeText={setName}
         />
-        <Text style={styles.title}>Username</Text>
+        <Text style={styles.title}>Tên đăng nhập</Text>
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="VD: hoidapnhanh"
           value={username}
           onChangeText={setUsername}
         />
-        <Text style={styles.title}>Password</Text>
+        <Text style={styles.title}>Mật khẩu</Text>
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -70,7 +76,7 @@ const Register = () => {
           value={password}
           onChangeText={setPassword}
         />
-        <Text style={styles.title}>Confirm Password</Text>
+        <Text style={styles.title}>Nhập lại mật khẩu</Text>
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
@@ -78,11 +84,9 @@ const Register = () => {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
         />
-        <Button
-          style={styles.button}
-          title="Register"
-          onPress={handleRegister}
-        />
+        <TouchableOpacity style={styles.btnRegister} onPress={handleRegister}>
+          <Text style={styles.registerText}>ĐĂNG KÍ</Text>
+        </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -107,8 +111,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  button: {
+  btnRegister: {
     marginTop: 20,
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  registerText: {
+    color: COLORS.white,
+    fontSize: 25,
+    fontWeight: 'bold',
   },
 });
 

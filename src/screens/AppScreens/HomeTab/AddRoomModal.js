@@ -1,6 +1,15 @@
 import React, {useState} from 'react';
-import {View, Modal, TextInput, Button, StyleSheet, Text} from 'react-native';
-import {CATEGORIES} from '../../../constants';
+import {
+  View,
+  Modal,
+  TextInput,
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import {CATEGORIES, COLORS} from '../../../constants';
 
 const AddRoomModal = ({visible, onClose, onSave}) => {
   const [name, setName] = useState('');
@@ -8,11 +17,15 @@ const AddRoomModal = ({visible, onClose, onSave}) => {
   const [category, setCategory] = useState('');
 
   const handleSave = () => {
-    onSave({name, description, category});
-    //clear all fields when saving
-    setName('');
-    setDescription('');
-    setCategory('');
+    if (!name || !description || !category) {
+      Alert.alert('Error', 'Hãy nhập đầy đủ các ô!');
+    } else {
+      onSave({name, description, category});
+      //clear all fields when saving
+      setName('');
+      setDescription('');
+      setCategory('');
+    }
   };
 
   const handleCategoryChange = selectedCategory => {
@@ -25,7 +38,9 @@ const AddRoomModal = ({visible, onClose, onSave}) => {
       <View style={styles.categoryBtn} key={key}>
         <Button
           title={CATEGORIES[key]}
-          color={category === CATEGORIES[key] ? 'red' : 'green'}
+          color={
+            category === CATEGORIES[key] ? COLORS.secondary : COLORS.primary
+          }
           onPress={() => handleCategoryChange(CATEGORIES[key])}
         />
       </View>
@@ -53,18 +68,12 @@ const AddRoomModal = ({visible, onClose, onSave}) => {
           <Text style={styles.title}>Category</Text>
           <View style={styles.categoriesList}>{renderCategories()}</View>
           <View style={styles.buttonContainer}>
-            <Button
-              title="Cancel"
-              onPress={onClose}
-              color="#999"
-              type="outline"
-            />
-            <Button
-              width={20}
-              title="Save"
-              onPress={handleSave}
-              type="outline"
-            />
+            <TouchableOpacity style={styles.btnClose} onPress={onClose}>
+              <Text style={styles.btnCloseText}>Hủy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnSave} onPress={handleSave}>
+              <Text style={styles.btnSaveText}>Lưu</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -109,6 +118,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 20,
+  },
+  btnClose: {
+    backgroundColor: COLORS.grayLight,
+    padding: 5,
+    width: 120,
+    alignItems: 'center',
+  },
+  btnCloseText: {
+    color: COLORS.gray,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  btnSave: {
+    backgroundColor: COLORS.primary,
+    padding: 5,
+    width: 120,
+    alignItems: 'center',
+  },
+  btnSaveText: {
+    color: COLORS.white,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 

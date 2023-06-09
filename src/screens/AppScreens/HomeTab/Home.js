@@ -9,6 +9,7 @@ import AddRoomModal from './AddRoomModal';
 import {addRoom, removeRoom} from './roomSlice';
 import {removeMessageAndAnswer} from '../ChatTab/messagesSlice';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {addRoomToDB} from '../../../storage/roomChat';
 
 const {width} = Dimensions.get('screen');
 
@@ -17,6 +18,7 @@ const Home = () => {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [deleteRoomId, setDeleteRoomId] = useState(0);
   const user = useSelector(userSelector);
+  const allRoomsList = useSelector(roomsCollector);
   const roomsList = useSelector(roomsCollector).filter(
     room => room.userId === user.id,
   );
@@ -25,6 +27,7 @@ const Home = () => {
   navigation.setOptions({
     tabBarVisible: true,
   });
+  console.log(roomsList);
 
   const roomRender = () => {
     return roomsList.map(room => (
@@ -56,7 +59,7 @@ const Home = () => {
     // console.log(room);
     dispatch(
       addRoom({
-        id: roomsList.length > 0 ? roomsList[roomsList.length - 1] + 1 : 0,
+        id: allRoomsList.length > 0 ? allRoomsList[allRoomsList.length - 1].id + 1 : 0,
         name: room.name,
         description: room.description,
         userId: user.id,
@@ -183,18 +186,19 @@ const styles = StyleSheet.create({
   roomWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.grayLight,
-    borderRadius: 5,
+    backgroundColor: COLORS.secondary,
+    borderRadius: 10,
     marginBottom: 10,
-    padding: 10,
+    padding: 15,
   },
   room: {
     width: 290,
-    borderRightWidth: 1,
+    borderRightWidth: 0.5,
     marginRight: 10,
+    borderColor: COLORS.primary,
   },
   roomTitle: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   roomDescription: {

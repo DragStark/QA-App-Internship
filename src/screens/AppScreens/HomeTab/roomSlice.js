@@ -10,6 +10,7 @@ const roomSlice = createSlice({
   reducers: {
     addRoom(state, actions) {
       state.push(actions.payload);
+      console.log(actions.payload);
       addRoomToDB(
         actions.payload.id,
         actions.payload.name,
@@ -17,7 +18,6 @@ const roomSlice = createSlice({
         actions.payload.category,
         actions.payload.userId,
       );
-      console.log(state);
     },
     removeRoom(state, actions) {
       console.log('remove room', actions.payload);

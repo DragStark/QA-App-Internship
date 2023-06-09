@@ -24,7 +24,7 @@ export const addAnswerToDB = () => {
   db.transaction(tx => {
     tx.executeSql(
       'INSERT INTO myAnswers (belongToQuestion, content, category, castTimes) VALUES (?,?,?,?)',
-      ['Tôi muốn học về kinh doanh, nên bắt đầu từ đâu ?','Bạn nên bắt đầu học từ những cuốn sách, có hàng triệu cuốn sách dạy về việc kinh doanh sao cho hiệu quả, hãy bắt đầu đọc những cuốn sách kinh điển như: cà phê sáng cùng tony, người giàu nhất thành babylon, ...','Kinh doanh', 0],
+      ['Học digital painting có thể làm những nghề nghiệp gì ?','Bạn có thể bắt đầu bằng việc nhận các job freelancer, sau đó khi có các sản phẩm nhất định và được người dùng tin tưởng, hãy bắt đầu xây dựng thương hiện cho mình, có thể xây dựng kênh youtube, tiktok. Một hướng đi an toàn hơn là bạn sẽ xin ứng tuyển vào các công ty có vị trí artist designer, ví dụ các công ty về game, về đồ ăn v.v...','Nghệ thuật', 0],
       (_, result) => {
         // Data inserted successfully
         console.log('Data inserted successfully');

@@ -41,6 +41,7 @@ const Chat = ({route}) => {
   const dispatch = useDispatch();
   const flatListRef = useRef(null);
   const navigation = useNavigation();
+  console.log(messages);
 
   //prepare data filtering when open chat box
   useEffect(() => {
@@ -76,7 +77,7 @@ const Chat = ({route}) => {
         source={
           item.userId !== 0
             ? {uri: user.avatar}
-            : require('../../../assets/default-user.png')
+            : require('../../../assets/bot-icon.jpg')
         }
         style={item.userId !== 0 ? styles.userAvatar : styles.botAvatar}
       />
@@ -99,7 +100,7 @@ const Chat = ({route}) => {
     <TouchableOpacity
       style={styles.suggestWrapper}
       onPress={() => handleChoseSuggestion(item.belongToQuestion)}>
-      <Text>{item.belongToQuestion}</Text>
+      <Text style={styles.suggestText}>{item.belongToQuestion}</Text>
     </TouchableOpacity>
   );
 
@@ -156,16 +157,15 @@ const Chat = ({route}) => {
     <View style={styles.container}>
       <KeyboardAvoidingView style={styles.chatWindow}>
         <View style={styles.headerGroup}>
-          <View style={styles.header}>
+          <View style={styles.descriptionWrapper}>
             <Text style={styles.headerTitleText}>{roomName}</Text>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text style={styles.headerTitleText}>Back</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.headerTitle}>
             <Text style={styles.headerDescription}>{roomDescription}</Text>
-            <Text style={styles.headerTitleText}>{roomCategory}</Text>
           </View>
+          <TouchableOpacity
+            style={styles.iconBack}
+            onPress={() => navigation.goBack()}>
+            <Icon name="chevron-back" size={30} color={COLORS.white} />
+          </TouchableOpacity>
         </View>
         <View style={styles.inbox}>
           {data.length > 0 && (
@@ -179,7 +179,9 @@ const Chat = ({route}) => {
           )}
           {data.length === 0 && inputText.length === 0 && (
             <View style={styles.greeting}>
-              <Text>Xin chào! chúng tôi có thể giúp gì cho bạn</Text>
+              <Text style={styles.greetingTitle}>
+                Xin chào! chúng tôi có thể giúp gì cho bạn
+              </Text>
               <FlatList
                 data={top3}
                 renderItem={renderMostPopularQuestion}
@@ -193,8 +195,11 @@ const Chat = ({route}) => {
               {suggestions.map(suggest => (
                 <TouchableOpacity
                   key={suggest.id}
+                  style={styles.suggestContainer}
                   onPress={() => setInputText(suggest.belongToQuestion)}>
-                  <Text>{suggest.belongToQuestion}</Text>
+                  <Text style={styles.suggestText}>
+                    {suggest.belongToQuestion}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -235,31 +240,42 @@ const styles = StyleSheet.create({
     width: width - 20,
     borderRadius: 5,
     marginTop: 10,
-    padding: 10,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  greetingTitle: {
+    fontSize: 18,
+  },
+  iconBack: {
+    position: 'absolute',
+    left: 10,
+    top: 15,
   },
   headerGroup: {
-    paddingBottom: 10,
-    borderBottomWidth: 1,
+    padding: 10,
+    borderBottomWidth: 0.2,
+    backgroundColor: COLORS.primary,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   headerTitle: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   headerTitleText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: COLORS.primary,
+    color: COLORS.white,
+  },
+  descriptionWrapper: {
+    alignItems: 'center',
   },
   headerDescription: {
     fontStyle: 'italic',
+    color: COLORS.white,
   },
   inbox: {
     flex: 12,
     justifyContent: 'space-between',
+    padding: 10,
   },
   userAvatar: {
     width: 40,
@@ -282,7 +298,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   questionContainer: {
-    borderRadius: 2,
+    borderRadius: 10,
     padding: 10,
     maxWidth: '60%',
     marginVertical: 10,
@@ -290,9 +306,8 @@ const styles = StyleSheet.create({
     marginLeft: 50,
   },
   answerContainer: {
-    borderWidth: 1,
-    borderColor: COLORS.gray,
-    borderRadius: 2,
+    backgroundColor: COLORS.answer,
+    borderRadius: 10,
     padding: 10,
     maxWidth: '60%',
     marginVertical: 10,
@@ -326,10 +341,18 @@ const styles = StyleSheet.create({
   suggestWrapper: {
     marginTop: 10,
     borderRadius: 20,
-    borderWidth: 1,
     padding: 10,
+    backgroundColor: COLORS.primary,
   },
   suggestList: {
-    color: COLORS.primary,
+    justifyContent: 'flex-end',
+  },
+  suggestContainer: {
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    borderBottomWidth: 0.5,
+  },
+  suggestText: {
+    color: COLORS.white,
   },
 });

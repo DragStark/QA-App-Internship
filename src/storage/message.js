@@ -6,7 +6,7 @@ export const createMessagesTable = () => {
   db.transaction(tx => {
     //create table
     tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS myMessages (id INTEGER PRIMARY KEY,message TEXT NOT NULL, roomId INTEGER NOT NULL, userId INTEGER NOT NULL)',
+      'CREATE TABLE IF NOT EXISTS myMessages (id INTEGER PRIMARY KEY AUTOINCREMENT,message TEXT NOT NULL, roomId INTEGER NOT NULL, userId INTEGER NOT NULL)',
       [],
       () => {
         // Data inserted successfully
@@ -39,15 +39,41 @@ export const addMessageToDB = (id, message, roomId, userId) => {
   });
 };
 
-export const deleteMessageById = (id) => {
+export const getLastMessageId = () => {
+  //vì hàm db.transaction là hàm đồng bộ nên cần thời gian lấy dữ liệu, cần tạo ra promise để đợi hàm này hoạt động
+  return new Promise((resolve, reject) => {
+    let lastMessageIdFromDB = 0;
+    db.transaction(
+      tx => {
+        tx.executeSql(
+          'SELECT id FROM myRoomChat',
+          [],
+          (_, resultSet) => {
+            const rows = resultSet.rows;
+            lastMessageIdFromDB = rows.item(rows.length - 1);
+            resolve(lastMessageIdFromDB); // Resolve the promise with the messagesList
+          },
+          (_, error) => {
+            reject(error); // Reject the promise with the error
+          },
+        );
+      },
+      error => {
+        reject(error); // Reject the promise with the error
+      },
+    );
+  });
+};
+
+export const deleteMessageByRoomId = (roomId) => {
   db.transaction(tx => {
     //add user question
     tx.executeSql(
-      'DELETE FROM myMessages WHERE id = ?;',
-      [id],
+      'DELETE FROM myMessages WHERE roomId = ?;',
+      [roomId],
       (_, result) => {
         // Data inserted successfully
-        console.log('deleted message', id);
+        console.log('deleted message of room', roomId);
         console.log(result);
       },
       (_, error) => {
